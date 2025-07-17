@@ -1,0 +1,110 @@
+body {
+    background-color: #330000;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #fff0cc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#header {
+    display: flex;
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.tab {
+    background: none;
+    border: 1px solid gold;
+    color: gold;
+    padding: 0.5em 1em;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#content {
+    margin-top: 2em;
+    width: 95%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.button-bar {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1em;
+}
+
+.button-bar.vertical {
+    flex-direction: column;
+}
+
+.button-bar button {
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    padding: 0.2em 0.6em;
+}
+
+.list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    width: 100%;
+}
+
+.item {
+    display: flex;
+    gap: 0.5em;
+    align-items: flex-start;
+}
+
+.item input[type="checkbox"] {
+    appearance: none;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.5em;
+    border: 1px solid white;
+    background: transparent;
+    cursor: pointer;
+}
+
+.item input[type="checkbox"].red {
+    background: red;
+}
+
+.item input[type="checkbox"].green {
+    background: green;
+}
+
+.item textarea {
+    flex: 1;
+    resize: none;
+    background: transparent;
+    color: #fff0cc;
+    font-size: 1em;
+    border: none;
+    border-bottom: 1px solid gold;
+    overflow: hidden;
+    min-height: 1.5em;
+    outline: none;
+    width: 100%;
+}
+
+.item textarea.collapsed {
+    max-height: 1.5em;
+    overflow: hidden;
+}
+
+@media (max-width: 1000px) {
+    .button-bar.vertical {
+        flex-direction: row;
+        margin-top: 1em;
+    }
+}
