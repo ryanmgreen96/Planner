@@ -115,13 +115,6 @@ $(document).ready(function () {
     const list = $(`.list-container[data-tab="${currentTab}"]`);
     list.empty();
 
-    const local = localStorage.getItem(`journal-${currentTab}`);
-    if (local) {
-      renderItems(JSON.parse(local));
-      return;
-    }
-
-    // Pull from Firebase ONLY if no local copy
     try {
       const docRef = doc(db, "users", userId, "journal", currentTab);
       const docSnap = await getDoc(docRef);
@@ -129,11 +122,19 @@ $(document).ready(function () {
         const data = docSnap.data().data || [];
         localStorage.setItem(`journal-${currentTab}`, JSON.stringify(data));
         renderItems(data);
+        return;
       }
     } catch (e) {
       console.error("Firebase Load Error:", e);
     }
+
+    // Fallback: load localStorage only if Firebase fails or no data
+    const local = localStorage.getItem(`journal-${currentTab}`);
+    if (local) {
+      renderItems(JSON.parse(local));
+    }
   }
+
 
   function renderItems(data) {
     const list = $(`.list-container[data-tab="${currentTab}"]`);
