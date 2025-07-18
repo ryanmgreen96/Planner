@@ -16,15 +16,31 @@
     </div>
 
     <div id="content">
+    <div class="list-wrapper" data-tab="day">
         <div class="button-bar vertical">
             <button class="add">+</button>
-            <button class="delete-all">-</button>
-            <button class="delete-marked">X</button>
+            <button class="delete-all">X</button>
+            <button class="delete-marked">-</button>
         </div>
+        <div class="list-container"></div>
+    </div>
+    <div class="list-wrapper" data-tab="thoughts" style="display:none;">
+        <div class="button-bar vertical">
+            <button class="add">+</button>
+            <button class="delete-all">X</button>
+            <button class="delete-marked">-</button>
+        </div>
+        <div class="list-container"></div>
+    </div>
+    <div class="list-wrapper" data-tab="create" style="display:none;" >
+        <div class="button-bar vertical">
+            <button class="add">+</button>
+            <button class="delete-all">X</button>
+            <button class="delete-marked">-</button>
+        </div>
+        <div class="list-container"></div>
+    </div>
 
-        <div class="list-container" data-tab="day"></div>
-        <div class="list-container" data-tab="thoughts" style="display:none;"></div>
-        <div class="list-container" data-tab="create" style="display:none;"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script type="module" src="script.js"></script>

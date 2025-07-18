@@ -1,5 +1,5 @@
 body {
-    background-color: #330000;
+    background-color: #3b0d0d;
     font-family: sans-serif;
     margin: 0;
     padding: 0;
@@ -17,8 +17,8 @@ body {
 
 .tab {
     background: none;
-    border: 1px solid gold;
-    color: gold;
+    border: 1px solid rgb(211, 189, 63);
+    color: rgb(229, 204, 65);
     padding: 0.5em 1em;
     font-size: 1.2em;
     cursor: pointer;
@@ -101,10 +101,48 @@ body {
     max-height: 1.5em;
     overflow: hidden;
 }
+.list-wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    width: 100%;
+}
 
 @media (max-width: 1000px) {
-    .button-bar.vertical {
-        flex-direction: row;
-        margin-top: 1em;
+    .list-wrapper {
+        flex-direction: column !important;
+        /* stack vertically */
+        gap: 0 !important;
+        /* remove gap */
     }
+
+    .button-bar.vertical {
+        flex-direction: row !important;
+        margin: 0 !important;
+        /* remove margin */
+        justify-content: flex-start;
+        gap: 0.3em !important;
+    }
+        #header {
+            margin-top: 0 !important;
+            gap: 0em !important;
+            margin-bottom: 0
+        }
+    
+        .tab {
+            font-size: 1em !important;
+            padding: 0.3em 0.6em !important;
+        }
+    
+        /* Shrink buttons */
+        .button-bar button {
+            font-size: 1em !important;
+            padding: 0.15em 0.4em !important;
+            min-width: 30px;
+        }
+        #header,
+        .button-bar {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
 }
