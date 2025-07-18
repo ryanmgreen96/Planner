@@ -25,14 +25,15 @@ $(document).ready(function () {
   let currentTab = "day";
   const userId = "anon-user"; // You can later replace this with Firebase Auth
 
-  $(".tab").click(async function () {
-    const tab = $(this).data("tab");
-    currentTab = tab;
-    $(".list-container").hide();
-    $(`.list-container[data-tab="${tab}"]`).show();
-    saveCurrentState();
-    await loadState(); // includes Firebase fetch if needed
-  });
+ $(".tab").click(async function () {
+   saveCurrentState(); // Save current tab BEFORE switching
+   const tab = $(this).data("tab");
+   currentTab = tab;
+   $(".list-container").hide();
+   $(`.list-container[data-tab="${tab}"]`).show();
+   await loadState(); // Load new tab AFTER switching
+ });
+
 
   $(".add").click(function () {
     const list = $(`.list-container[data-tab="${currentTab}"]`);
@@ -136,20 +137,30 @@ $(document).ready(function () {
   }
 
 
-  function renderItems(data) {
-    const list = $(`.list-container[data-tab="${currentTab}"]`);
-    data.forEach(({ text, state }) => {
-      const item = createItem(text);
-      const box = item.find("input[type=checkbox]");
-      const area = item.find("textarea");
-      if (state === "red") box.addClass("red");
-      if (state === "green") {
-        box.addClass("green");
-        area.addClass("collapsed");
-      }
-      list.append(item);
-    });
-  }
+ function renderItems(data) {
+   const list = $(`.list-container[data-tab="${currentTab}"]`);
+   list.empty(); // Clear existing items before rendering new ones
+
+   data.forEach(({ text, state }) => {
+     const item = createItem(text);
+     const box = item.find("input[type=checkbox]");
+     const area = item.find("textarea");
+
+     // Restore checkbox states
+     if (state === "red") box.addClass("red");
+     if (state === "green") {
+       box.addClass("green");
+       area.addClass("collapsed");
+     }
+
+     // Auto-expand textarea height
+     area[0].style.height = "auto";
+     area[0].style.height = area[0].scrollHeight + "px";
+
+     list.append(item);
+   });
+ }
+
 
   loadState(); // initial load
 });
