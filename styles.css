@@ -108,6 +108,44 @@ body {
     width: 100%;
 }
 
+
+.button-bar .divider-add {
+    font-size: 1.2em;
+    background: none;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 0.2em 0.6em;
+    cursor: pointer;
+}
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin: 1em 0;
+    /* increased top/bottom margin */
+    justify-content: flex-start;
+}
+
+.divider input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 1.5em;
+    height: 1em;
+    cursor: pointer;
+}
+
+.divider::after {
+    content: "";
+    width: 150px;
+    /* fixed width line */
+    height: 2px;
+    background-color: darkgreen;
+    border-radius: 1px;
+}
+textarea {
+    spellcheck: false;
+}
+
 @media (max-width: 1000px) {
     .list-wrapper {
         flex-direction: column !important;

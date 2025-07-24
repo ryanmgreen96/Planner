@@ -35,26 +35,84 @@ $(document).ready(function () {
  });
 
 
- $(document).on("click", ".add", function () {
-   const list = $(`.list-wrapper[data-tab="${currentTab}"] .list-container`);
-   const item = createItem("");
-   list.prepend(item);
-   item.find("textarea").focus();
+$(document).on("click", ".add", function (e) {
+  const list = $(`.list-wrapper[data-tab="${currentTab}"] .list-container`);
+  let item;
+  if (e.shiftKey) {
+    item = createDivider();
+  } else {
+    item = createItem("");
+  }
+  list.prepend(item);
+  item.find("textarea").focus();
+  saveCurrentState();
+});
+
+$(document).on("click", ".divider-add", function () {
+  const list = $(`.list-wrapper[data-tab="${currentTab}"] .list-container`);
+  const divider = createDivider();
+  const item = createItem("");
+
+  list.prepend(divider);
+  list.prepend(item);
+  item.find("textarea").focus();
+
+  // Turn all items below divider green
+  let markGreen = false;
+  list.children(".item").each(function () {
+    if ($(this).is(divider)) {
+      markGreen = true;
+      return true; // continue
+    }
+    if (markGreen) {
+      const box = $(this).find("input[type=checkbox]");
+      if (box.length) {
+        box.removeClass("red").addClass("green");
+        $(this).find("textarea").addClass("collapsed");
+      }
+    }
+  });
+
+  saveCurrentState();
+});
+
+
+
+
+
+
+
+ $(document).on("click", ".delete-all", function () {
+   const items = $(`.list-wrapper[data-tab="${currentTab}"] .item`);
+   let mark = false;
+   items.each(function () {
+     if ($(this).hasClass("divider")) {
+       mark = true;
+       return true;
+     }
+     if (mark) {
+       const box = $(this).find("input[type=checkbox]");
+       if (box.length) {
+         box.removeClass("green").addClass("red");
+         $(this).find("textarea").removeClass("collapsed");
+       }
+     }
+   });
    saveCurrentState();
  });
 
- $(document).on("click", ".delete-all", function () {
-   $(`.list-wrapper[data-tab="${currentTab}"] .list-container`).empty();
-   saveCurrentState();
- });
 
   $(document).on("click", ".delete-marked", function () {
     $(`.list-wrapper[data-tab="${currentTab}"] .item`).each(function () {
       const box = $(this).find("input[type=checkbox]");
-      if (box.hasClass("red")) $(this).remove();
+      if (box.hasClass("red")) {
+        $(this).remove();
+      }
     });
     saveCurrentState();
   });
+
+
 
   function createItem(text) {
     const wrapper = $("<div class='item'></div>");
@@ -85,21 +143,48 @@ $(document).ready(function () {
     wrapper.append(box, area);
     return wrapper;
   }
+ 
+  function createDivider() {
+    const wrapper = $("<div class='item divider'></div>");
+    const box = $("<input type='checkbox'>");
+    wrapper.append(box);
 
-   function getListData() {
-     const data = [];
-     $(`.list-wrapper[data-tab="${currentTab}"] .item`).each(function () {
-       const text = $(this).find("textarea").val();
-       const box = $(this).find("input[type=checkbox]");
-       const state = box.hasClass("green")
-         ? "green"
-         : box.hasClass("red")
-         ? "red"
-         : "";
-       data.push({ text, state });
-     });
-     return data;
-   }
+   box.on("click", function () {
+     if (!box.hasClass("red")) {
+       box.addClass("red");
+     } else {
+       box.removeClass("red");
+     }
+     saveCurrentState();
+   });
+
+
+    return wrapper;
+  }
+
+
+
+
+
+  function getListData() {
+    const data = [];
+    $(`.list-wrapper[data-tab="${currentTab}"] .item`).each(function () {
+      if ($(this).hasClass("divider")) {
+        data.push({ type: "divider" });
+        return;
+      }
+      const text = $(this).find("textarea").val();
+      const box = $(this).find("input[type=checkbox]");
+      const state = box.hasClass("green")
+        ? "green"
+        : box.hasClass("red")
+        ? "red"
+        : "";
+      data.push({ type: "item", text, state });
+    });
+    return data;
+  }
+
 
 
   function saveCurrentState() {
@@ -147,12 +232,17 @@ $(document).ready(function () {
 
    list.empty(); // Clear existing items before rendering new ones
 
-   data.forEach(({ text, state }) => {
+   data.forEach((entry) => {
+     if (entry.type === "divider") {
+       list.append(createDivider());
+       return;
+     }
+
+     const { text, state } = entry;
      const item = createItem(text);
      const box = item.find("input[type=checkbox]");
      const area = item.find("textarea");
 
-     // Restore checkbox states
      if (state === "green") {
        box.addClass("green");
        area.addClass("collapsed");
@@ -160,20 +250,17 @@ $(document).ready(function () {
        box.addClass("red");
        area.removeClass("collapsed");
      } else {
-       // Blank: no class, no collapse
        area.removeClass("collapsed");
      }
 
-
-     // Auto-expand textarea height
-    setTimeout(() => {
-      area[0].style.height = "auto";
-      area[0].style.height = area[0].scrollHeight + "px";
-    }, 0);
-
+     setTimeout(() => {
+       area[0].style.height = "auto";
+       area[0].style.height = area[0].scrollHeight + "px";
+     }, 0);
 
      list.append(item);
    });
+
  }
 
 
