@@ -57,28 +57,10 @@ $(document).on("click", ".divider-add", function () {
   list.prepend(item);
   item.find("textarea").focus();
 
-  // Turn all items below divider green
-  let markGreen = false;
-  list.children(".item").each(function () {
-    if ($(this).is(divider)) {
-      markGreen = true;
-      return true; // continue
-    }
-    if (markGreen) {
-      const box = $(this).find("input[type=checkbox]");
-      if (box.length) {
-        box.removeClass("red").addClass("green");
-        $(this).find("textarea").addClass("collapsed");
-      }
-    }
-  });
+  updateItemsBelow(divider, "green");
 
   saveCurrentState();
 });
-
-
-
-
 
 
 
@@ -149,20 +131,51 @@ $(document).on("click", ".divider-add", function () {
     const box = $("<input type='checkbox'>");
     wrapper.append(box);
 
-   box.on("click", function () {
-     if (!box.hasClass("red")) {
-       box.addClass("red");
-     } else {
-       box.removeClass("red");
-     }
-     saveCurrentState();
-   });
+    // Start green by default (when created)
+    box.addClass("green");
 
+    box.on("click", function () {
+      if (box.hasClass("green")) {
+        box.removeClass("green").addClass("red");
+        wrapper.removeClass("collapsed"); // optional style
+        updateItemsBelow(wrapper, "red");
+      } else {
+        box.removeClass("red").addClass("green");
+        wrapper.addClass("collapsed"); // optional style
+        updateItemsBelow(wrapper, "green");
+      }
+      saveCurrentState();
+    });
+
+    // Optional: add collapsed style initially
+    wrapper.addClass("collapsed");
 
     return wrapper;
   }
 
+  function updateItemsBelow(divider, color) {
+    let mark = false;
+    const list = divider.parent();
 
+    list.children(".item").each(function () {
+      if ($(this).is(divider)) {
+        mark = true;
+        return true; // continue loop
+      }
+      if (mark) {
+        const box = $(this).find("input[type=checkbox]");
+        const area = $(this).find("textarea");
+        if (box.length) {
+          box.removeClass("green red").addClass(color);
+          if (color === "green") {
+            area.addClass("collapsed");
+          } else {
+            area.removeClass("collapsed");
+          }
+        }
+      }
+    });
+  }
 
 
 
