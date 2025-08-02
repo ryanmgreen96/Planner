@@ -22,7 +22,7 @@ const db = getFirestore(app);
 // --- App Logic ---
 $(document).ready(function () {
   const sections = ["day", "thoughts", "create"];
-  let currentTab = "day";
+  let currentTab = "thoughts";
   const userId = "anon-user"; // You can later replace this with Firebase Auth
 
  $(".tab").click(async function () {
@@ -99,7 +99,7 @@ $(document).on("click", ".divider-add", function () {
   function createItem(text) {
     const wrapper = $("<div class='item'></div>");
     const box = $("<input type='checkbox'>");
-    const area = $("<textarea></textarea>").val(text);
+    const area = $("<textarea spellcheck='false'></textarea>").val(text);
 
   box.on("click", function () {
     if (!box.hasClass("green") && !box.hasClass("red")) {
